@@ -96,7 +96,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
               newUserOdds[userAddress] = 0
             }
 
-            newUserOdds[userAddress] += odds * vaultPortion
+            newUserOdds[userAddress] += formatPrettyOdds(odds * vaultPortion)
           })
         }
       })
@@ -108,4 +108,8 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
   } catch (e) {
     console.error(e)
   }
+}
+
+const formatPrettyOdds = (odds: number) => {
+  return parseInt((odds * 100_000).toFixed(0))
 }
