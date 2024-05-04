@@ -22,14 +22,12 @@ export const PRIZE_POOLS: Record<
   {
     address: Address
     gpDraws: number
-    twabController: { address: Address }
     prizeToken: { decimals: number }
   }
 > = {
   [Network.optimism]: {
     address: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
     gpDraws: 91,
-    twabController: { address: '0xCB0672dE558Ad8F122C0E081f0D35480aB3be167' },
     prizeToken: { decimals: 18 }
   }
 }
