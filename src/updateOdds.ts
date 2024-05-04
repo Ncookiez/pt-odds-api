@@ -111,5 +111,5 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
 }
 
 const formatPrettyOdds = (odds: number) => {
-  return parseInt((odds * 100_000).toFixed(0))
+  return parseInt((odds * 100_000_000).toFixed(0))
 }
