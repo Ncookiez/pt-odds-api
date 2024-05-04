@@ -1,0 +1,16 @@
+name = "pt-odds-api"
+main = "./src/index.ts"
+compatibility_date = "2023-05-18"
+
+account_id = "<YOUR_ACCOUNT_ID_HERE>"
+
+kv_namespaces = [
+  { binding = "USER_ODDS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
+  { binding = "OLD_USER_ODDS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
+]
+
+[triggers]
+crons = ["30 23 * * *"]
+
+[vars]
+OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
