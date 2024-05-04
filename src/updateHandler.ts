@@ -3,7 +3,7 @@ import { Network } from './constants'
 import { UserOdds } from './types'
 
 export const updateHandler = async (
-  event: ScheduledEvent,
+  event: FetchEvent | ScheduledEvent,
   chainId: Network,
   newUserOdds: UserOdds
 ) => {

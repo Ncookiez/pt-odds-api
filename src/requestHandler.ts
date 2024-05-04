@@ -1,4 +1,5 @@
 import { DEFAULT_HEADERS, NETWORKS } from './constants'
+import { updateOdds } from './updateOdds'
 import { fetchOdds } from './fetchOdds'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
@@ -36,6 +37,15 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
             status: 500
           })
         }
+      }
+
+      if (url.pathname === `/${network}/update`) {
+        await updateOdds(event, network)
+
+        return new Response('Updated', {
+          ...DEFAULT_HEADERS,
+          status: 200
+        })
       }
     }
 

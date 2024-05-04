@@ -12,7 +12,7 @@ import { updateHandler } from './updateHandler'
 import { UserOdds } from './types'
 import type { Address } from 'viem'
 
-export const updateOdds = async (event: ScheduledEvent, chainId: Network) => {
+export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Network) => {
   try {
     const prizePoolInfo = PRIZE_POOLS[chainId]
     const publicClient = VIEM_CLIENTS[chainId]
