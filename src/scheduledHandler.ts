@@ -1,5 +1,5 @@
-import { NETWORKS } from './constants'
 import { updateOdds } from './updateOdds'
+import { NETWORKS } from './constants'
 
 export const handleScheduled = async (event: ScheduledEvent): Promise<boolean> => {
   try {

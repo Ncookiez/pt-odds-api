@@ -1,6 +1,6 @@
+import { updateHandler } from './updateHandler'
 import { Network } from './constants'
 import { UserOdds } from './types'
-import { updateHandler } from './updateHandler'
 
 export const updateOdds = async (event: ScheduledEvent, chainId: Network) => {
   try {

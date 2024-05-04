@@ -1,6 +1,6 @@
 import { getNetworkNameByChainId } from '@generationsoftware/hyperstructure-client-js'
-import { UserOdds } from './types'
 import { Network } from './constants'
+import { UserOdds } from './types'
 
 export const updateHandler = async (
   event: ScheduledEvent,
