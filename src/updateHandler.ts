@@ -1,6 +1,6 @@
 import { getNetworkNameByChainId } from '@generationsoftware/hyperstructure-client-js'
 import { Network } from './constants'
-import { UserOdds } from './types'
+import type { UserOdds, UserOddsMetadata } from './types'
 
 export const updateHandler = async (
   event: FetchEvent | ScheduledEvent,
@@ -10,7 +10,9 @@ export const updateHandler = async (
   const networkName = getNetworkNameByChainId(chainId)
 
   if (!!networkName) {
-    const { value: lastUserOdds, metadata } = await USER_ODDS.getWithMetadata(networkName)
+    const { value: lastUserOdds, metadata } = await USER_ODDS.getWithMetadata<UserOddsMetadata>(
+      networkName
+    )
 
     if (!!lastUserOdds) {
       event.waitUntil(OLD_USER_ODDS.put(networkName, lastUserOdds, { metadata }))
