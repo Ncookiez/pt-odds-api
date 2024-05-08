@@ -37,6 +37,6 @@ export const NETWORKS = Object.keys(PRIZE_POOLS).map((id) => parseInt(id) as Net
 export const VIEM_CLIENTS: Record<Network, PublicClient> = {
   [Network.optimism]: createPublicClient({
     chain: optimism,
-    transport: fallback([http(OPTIMISM_RPC_URL), http()])
+    transport: http(OPTIMISM_RPC_URL)
   }) as PublicClient
 }

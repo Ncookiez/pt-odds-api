@@ -1,7 +1,6 @@
 import {
   PrizePool,
   divideBigInts,
-  getSimpleMulticallResults,
   getVaultId,
   lower,
   prizePoolABI
@@ -30,33 +29,30 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
       const vaults = await getSubgraphVaults(chainId)
       const vaultAddresses = vaults.map((v) => v.address)
 
-      const newUserOdds: UserOdds = {}
-
       const vaultPortions = await prizePool.getVaultContributedPercentages(
         vaultAddresses,
         startDrawId,
         lastDrawId
       )
 
-      const calls: {
+      const contracts: {
+        address: Address
+        abi: typeof prizePoolABI
         functionName: 'getVaultUserBalanceAndTotalSupplyTwab'
         args: [Address, Address, number, number]
       }[] = []
       vaults.forEach((vault) => {
         vault.userAddresses.forEach((userAddress) => {
-          calls.push({
+          contracts.push({
+            address: prizePool.address,
+            abi: prizePoolABI,
             functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
             args: [vault.address, userAddress, startDrawId, lastDrawId]
           })
         })
       })
 
-      const multicallResults = await getSimpleMulticallResults(
-        publicClient,
-        prizePool.address,
-        prizePoolABI,
-        calls
-      )
+      const multicallResults = await publicClient.multicall({ contracts, batchSize: 1024 * 1024 })
 
       const vaultUserOdds: {
         [vaultId: string]: { userAddress: Lowercase<Address>; odds: number }[]
@@ -67,11 +63,10 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
         const vaultId = getVaultId({ chainId, address: vault.address })
 
         vault.userAddresses.forEach((_userAddress) => {
-          const result = multicallResults[multicallIndex++]
+          const call = multicallResults[multicallIndex++]
 
-          if (!!result) {
-            const userTwab = typeof result[0] === 'bigint' ? result[0] : 0n
-            const vaultTwab = typeof result[1] === 'bigint' ? result[1] : 0n
+          if (call.status === 'success') {
+            const [userTwab, vaultTwab] = call.result
 
             if (!!userTwab && !!vaultTwab) {
               if (vaultUserOdds[vaultId] === undefined) {
@@ -87,6 +82,8 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
         })
       })
 
+      const newUserOdds: UserOdds = {}
+
       Object.entries(vaultUserOdds).forEach(([vaultId, entries]) => {
         const vaultPortion = vaultPortions[vaultId]
 
@@ -96,7 +93,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
               newUserOdds[userAddress] = 0
             }
 
-            newUserOdds[userAddress] += formatPrettyOdds(odds * vaultPortion)
+            newUserOdds[userAddress] += odds * vaultPortion * 100
           })
         }
       })
@@ -108,8 +105,4 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
   } catch (e) {
     console.error(e)
   }
-}
-
-const formatPrettyOdds = (odds: number) => {
-  return parseInt((odds * 100_000_000).toFixed(0))
 }
