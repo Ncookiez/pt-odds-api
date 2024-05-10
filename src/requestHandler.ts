@@ -39,14 +39,21 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         }
       }
 
-      if (url.pathname === `/${network}/update`) {
-        await updateOdds(event, network)
+      // if (url.pathname === `/${network}/update`) {
+      //   const newOdds = await updateOdds(event, network)
 
-        return new Response('Updated', {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
-      }
+      //   if (!!newOdds) {
+      //     return new Response(JSON.stringify(newOdds), {
+      //       ...DEFAULT_HEADERS,
+      //       status: 200
+      //     })
+      //   } else {
+      //     return new Response(newOdds, {
+      //       ...DEFAULT_HEADERS,
+      //       status: 500
+      //     })
+      //   }
+      // }
     }
 
     return new Response(JSON.stringify({ message: 'Invalid Request' }), {

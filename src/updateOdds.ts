@@ -99,6 +99,8 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
       })
 
       await updateHandler(event, chainId, newUserOdds)
+
+      return newUserOdds
     } else {
       throw new Error('Invalid network config')
     }
