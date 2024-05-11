@@ -1,10 +1,10 @@
 import { Address } from 'viem'
 
-export interface UserOdds {
+export interface Data {
   [userAddress: Lowercase<Address>]: number
 }
 
-export interface UserOddsMetadata {
+export interface Metadata {
   lastUpdated: string
 }
 

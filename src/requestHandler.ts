@@ -1,4 +1,6 @@
 import { DEFAULT_HEADERS, NETWORKS } from './constants'
+import { updatePrizes } from './updatePrizes'
+import { fetchPrizes } from './fetchPrizes'
 import { updateOdds } from './updateOdds'
 import { fetchOdds } from './fetchOdds'
 
@@ -39,20 +41,46 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         }
       }
 
-      // if (url.pathname === `/${network}/update`) {
-      //   const newOdds = await updateOdds(event, network)
+      if (url.pathname === `/${network}/prizes`) {
+        const prizes = await fetchPrizes(network)
 
-      //   if (!!newOdds) {
-      //     return new Response(JSON.stringify(newOdds), {
-      //       ...DEFAULT_HEADERS,
-      //       status: 200
-      //     })
-      //   } else {
-      //     return new Response(newOdds, {
-      //       ...DEFAULT_HEADERS,
-      //       status: 500
-      //     })
-      //   }
+        if (!!prizes) {
+          return new Response(prizes, {
+            ...DEFAULT_HEADERS,
+            status: 200
+          })
+        } else {
+          return new Response(prizes, {
+            ...DEFAULT_HEADERS,
+            status: 500
+          })
+        }
+      }
+
+      if (url.pathname === `/${network}/prizes/old`) {
+        const oldPrizes = await fetchPrizes(network, { old: true })
+
+        if (!!oldPrizes) {
+          return new Response(oldPrizes, {
+            ...DEFAULT_HEADERS,
+            status: 200
+          })
+        } else {
+          return new Response(oldPrizes, {
+            ...DEFAULT_HEADERS,
+            status: 500
+          })
+        }
+      }
+
+      // if (url.pathname === `/${network}/update`) {
+      //   await updateOdds(event, network)
+      //   await updatePrizes(event, network)
+
+      //   return new Response('Updated', {
+      //     ...DEFAULT_HEADERS,
+      //     status: 200
+      //   })
       // }
     }
 

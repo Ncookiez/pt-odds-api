@@ -6,7 +6,9 @@ account_id = "<YOUR_ACCOUNT_ID_HERE>"
 
 kv_namespaces = [
   { binding = "USER_ODDS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
-  { binding = "OLD_USER_ODDS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
+  { binding = "OLD_USER_ODDS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
+  { binding = "USER_PRIZES", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
+  { binding = "OLD_USER_PRIZES", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
 ]
 
 [triggers]

@@ -8,7 +8,7 @@ import {
 import { Network, PRIZE_POOLS, VIEM_CLIENTS } from './constants'
 import { getSubgraphVaults } from './subgraphs'
 import { updateHandler } from './updateHandler'
-import { UserOdds } from './types'
+import type { Data } from './types'
 import type { Address } from 'viem'
 
 export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Network) => {
@@ -82,7 +82,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
         })
       })
 
-      const newUserOdds: UserOdds = {}
+      const newUserOdds: Data = {}
 
       Object.entries(vaultUserOdds).forEach(([vaultId, entries]) => {
         const vaultPortion = vaultPortions[vaultId]
@@ -98,7 +98,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent, chainId: Ne
         }
       })
 
-      await updateHandler(event, chainId, newUserOdds)
+      await updateHandler(event, chainId, USER_ODDS, newUserOdds, OLD_USER_ODDS)
 
       return newUserOdds
     } else {
