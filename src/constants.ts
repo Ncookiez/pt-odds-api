@@ -1,5 +1,5 @@
-import { createPublicClient, fallback, http } from 'viem'
-import { optimism } from 'viem/chains'
+import { createPublicClient, http } from 'viem'
+import { base, optimism } from 'viem/chains'
 import type { Address, PublicClient } from 'viem'
 
 export const DEFAULT_HEADERS = {
@@ -14,7 +14,8 @@ export const DEFAULT_HEADERS = {
 }
 
 export enum Network {
-  optimism = 10
+  optimism = 10,
+  base = 8453
 }
 
 export const PRIZE_POOLS: Record<
@@ -29,6 +30,11 @@ export const PRIZE_POOLS: Record<
     address: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
     gpDraws: 91,
     prizeToken: { decimals: 18 }
+  },
+  [Network.base]: {
+    address: '0x45b2010d8A4f08b53c9fa7544C51dFd9733732cb',
+    gpDraws: 91,
+    prizeToken: { decimals: 18 }
   }
 }
 
@@ -38,5 +44,9 @@ export const VIEM_CLIENTS: Record<Network, PublicClient> = {
   [Network.optimism]: createPublicClient({
     chain: optimism,
     transport: http(OPTIMISM_RPC_URL)
+  }) as PublicClient,
+  [Network.base]: createPublicClient({
+    chain: base,
+    transport: http(BASE_RPC_URL)
   }) as PublicClient
 }

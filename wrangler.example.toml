@@ -16,3 +16,4 @@ crons = ["30 23 * * *"]
 
 [vars]
 OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
+BASE_RPC_URL = "<YOUR_RPC_URL_HERE>"
