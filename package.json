@@ -1,13 +1,13 @@
 {
   "name": "pt-odds-api",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@generationsoftware/hyperstructure-client-js": "1.13.1",
+    "@generationsoftware/hyperstructure-client-js": "1.13.3",
     "viem": "2.13.2"
   },
   "devDependencies": {
