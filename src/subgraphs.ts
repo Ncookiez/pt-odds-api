@@ -1,12 +1,11 @@
-import { Address } from 'viem'
-import { Network } from './constants'
-import { SubgraphVault } from './types'
 import {
   SUBGRAPH_API_URLS,
   getNiceNetworkNameByChainId
 } from '@generationsoftware/hyperstructure-client-js'
+import { Address } from 'viem'
+import type { SubgraphVault } from './types'
 
-export const getSubgraphVaults = async (chainId: Network) => {
+export const getSubgraphVaults = async () => {
   const vaults: SubgraphVault[] = []
   const vaultAddresses = new Set<Address>()
   const pageSize = 1_000
@@ -18,7 +17,7 @@ export const getSubgraphVaults = async (chainId: Network) => {
     while (true) {
       let needsNewUsersPage = false
 
-      const newPage = await getSubgraphVaultsPage(chainId, {
+      const newPage = await getSubgraphVaultsPage({
         numVaults: pageSize,
         numUsers: pageSize,
         offsetVaults: vaultsPage * pageSize,
@@ -58,17 +57,14 @@ export const getSubgraphVaults = async (chainId: Network) => {
   return vaults
 }
 
-export const getSubgraphVaultsPage = async (
-  chainId: Network,
-  options?: {
-    numVaults?: number
-    numUsers?: number
-    offsetVaults?: number
-    offsetUsers?: number
-  }
-): Promise<SubgraphVault[]> => {
-  if (chainId in SUBGRAPH_API_URLS) {
-    const subgraphUrl = SUBGRAPH_API_URLS[chainId as keyof typeof SUBGRAPH_API_URLS]
+export const getSubgraphVaultsPage = async (options?: {
+  numVaults?: number
+  numUsers?: number
+  offsetVaults?: number
+  offsetUsers?: number
+}): Promise<SubgraphVault[]> => {
+  if (NETWORK in SUBGRAPH_API_URLS) {
+    const subgraphUrl = SUBGRAPH_API_URLS[NETWORK]
 
     const headers = { 'Content-Type': 'application/json' }
 
@@ -102,7 +98,7 @@ export const getSubgraphVaultsPage = async (
 
     return formattedVaults
   } else {
-    console.warn(`No ${getNiceNetworkNameByChainId(chainId)} Subgraph`)
+    console.warn(`No ${getNiceNetworkNameByChainId(NETWORK)} Subgraph`)
     return []
   }
 }

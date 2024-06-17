@@ -1,6 +1,6 @@
-import { createPublicClient, http } from 'viem'
 import { base, optimism, arbitrum } from 'viem/chains'
-import type { Address, PublicClient } from 'viem'
+import { createPublicClient, http } from 'viem'
+import type { Address, Chain } from 'viem'
 
 export const DEFAULT_HEADERS = {
   headers: {
@@ -17,6 +17,12 @@ export enum Network {
   optimism = 10,
   base = 8453,
   arbitrum = 42161
+}
+
+export const CHAINS: Record<Network, Chain> = {
+  [optimism.id]: optimism,
+  [base.id]: base,
+  [arbitrum.id]: arbitrum
 }
 
 export const PRIZE_POOLS: Record<
@@ -44,19 +50,4 @@ export const PRIZE_POOLS: Record<
   }
 }
 
-export const NETWORKS = Object.keys(PRIZE_POOLS).map((id) => parseInt(id) as Network)
-
-export const VIEM_CLIENTS: Record<Network, PublicClient> = {
-  [Network.optimism]: createPublicClient({
-    chain: optimism,
-    transport: http(OPTIMISM_RPC_URL)
-  }) as PublicClient,
-  [Network.base]: createPublicClient({
-    chain: base,
-    transport: http(BASE_RPC_URL)
-  }) as PublicClient,
-  [Network.arbitrum]: createPublicClient({
-    chain: arbitrum,
-    transport: http(ARBITRUM_RPC_URL)
-  }) as PublicClient
-}
+export const VIEM_CLIENT = createPublicClient({ chain: CHAINS[NETWORK], transport: http(RPC_URL) })

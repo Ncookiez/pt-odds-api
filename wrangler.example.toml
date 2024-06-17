@@ -1,4 +1,4 @@
-name = "pt-odds-api"
+name = "<YOUR_NETWORK_NAME_HERE>-pt-odds-api"
 main = "./src/index.ts"
 compatibility_date = "2023-05-18"
 
@@ -15,6 +15,5 @@ kv_namespaces = [
 crons = ["30 23 * * *"]
 
 [vars]
-OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
-BASE_RPC_URL = "<YOUR_RPC_URL_HERE>"
-ARBITRUM_RPC_URL = "<YOUR_RPC_URL_HERE>"
+NETWORK = <YOUR_NETWORK_ID_HERE>
+RPC_URL = "<YOUR_RPC_URL_HERE>"

@@ -1,100 +1,41 @@
-import { DEFAULT_HEADERS, NETWORKS } from './constants'
-import { updatePrizes } from './updatePrizes'
-import { fetchPrizes } from './fetchPrizes'
-import { updateOdds } from './updateOdds'
-import { fetchOdds } from './fetchOdds'
+import { updateOdds, updatePrizes } from './updaters'
+import { fetchOdds, fetchPrizes } from './kvs'
+import { DEFAULT_HEADERS } from './constants'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
-    const url = new URL(event.request.url)
+    const { pathname, searchParams } = new URL(event.request.url)
 
-    for (const network of NETWORKS) {
-      if (url.pathname === `/${network}`) {
-        const odds = await fetchOdds(network)
+    if (pathname.startsWith('/odds')) {
+      const old = pathname.startsWith('/odds/old') || searchParams.get('old') === 'true'
+      const odds = await fetchOdds({ old })
 
-        if (!!odds) {
-          return new Response(odds, {
-            ...DEFAULT_HEADERS,
-            status: 200
-          })
-        } else {
-          return new Response(odds, {
-            ...DEFAULT_HEADERS,
-            status: 500
-          })
-        }
-      }
-
-      if (url.pathname === `/${network}/old`) {
-        const oldOdds = await fetchOdds(network, { old: true })
-
-        if (!!oldOdds) {
-          return new Response(oldOdds, {
-            ...DEFAULT_HEADERS,
-            status: 200
-          })
-        } else {
-          return new Response(oldOdds, {
-            ...DEFAULT_HEADERS,
-            status: 500
-          })
-        }
-      }
-
-      if (url.pathname === `/${network}/prizes`) {
-        const prizes = await fetchPrizes(network)
-
-        if (!!prizes) {
-          return new Response(prizes, {
-            ...DEFAULT_HEADERS,
-            status: 200
-          })
-        } else {
-          return new Response(prizes, {
-            ...DEFAULT_HEADERS,
-            status: 500
-          })
-        }
-      }
-
-      if (url.pathname === `/${network}/prizes/old`) {
-        const oldPrizes = await fetchPrizes(network, { old: true })
-
-        if (!!oldPrizes) {
-          return new Response(oldPrizes, {
-            ...DEFAULT_HEADERS,
-            status: 200
-          })
-        } else {
-          return new Response(oldPrizes, {
-            ...DEFAULT_HEADERS,
-            status: 500
-          })
-        }
-      }
-
-      // if (url.pathname === `/${network}/update`) {
-      //   await updateOdds(event, network)
-      //   await updatePrizes(event, network)
-
-      //   return new Response('Updated', {
-      //     ...DEFAULT_HEADERS,
-      //     status: 200
-      //   })
-      // }
+      return new Response(odds, { ...DEFAULT_HEADERS, status: !!odds ? 200 : 500 })
     }
 
-    return new Response(JSON.stringify({ message: 'Invalid Request' }), {
-      ...DEFAULT_HEADERS,
-      status: 400
-    })
+    if (pathname.startsWith('/prizes')) {
+      const old = pathname.startsWith('/prizes/old') || searchParams.get('old') === 'true'
+      const prizes = await fetchPrizes({ old })
+
+      return new Response(prizes, { ...DEFAULT_HEADERS, status: !!prizes ? 200 : 500 })
+    }
+
+    // if (pathname === `/update`) {
+    //   const newOdds = await updateOdds(event)
+    //   const newPrizes = await updatePrizes(event)
+    //   const isSuccess = !!newOdds && !!newPrizes
+
+    //   return new Response(isSuccess ? 'Updated' : 'Failed to update', {
+    //     ...DEFAULT_HEADERS,
+    //     status: isSuccess ? 200 : 500
+    //   })
+    // }
+
+    return new Response('Invalid request', { ...DEFAULT_HEADERS, status: 400 })
   } catch (e) {
     console.error(e)
 
-    const errorResponse = new Response('Error', {
-      ...DEFAULT_HEADERS,
-      status: 500
-    })
+    const errorResponse = new Response('Error', { ...DEFAULT_HEADERS, status: 500 })
     errorResponse.headers.set('Content-Type', 'text/plain')
 
     return errorResponse
