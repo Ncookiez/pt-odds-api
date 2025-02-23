@@ -36,19 +36,21 @@ export const fetchPrizes = async (options?: { old?: boolean }) => {
 }
 
 export const updateHandler = async (event: FetchEvent | ScheduledEvent, kv: KVNamespace, newData: Data, oldKv?: KVNamespace) => {
-  const networkName = getNetworkNameByChainId(NETWORK)
+  if (!!Object.keys(newData).length) {
+    const networkName = getNetworkNameByChainId(NETWORK)
 
-  if (!!networkName) {
-    const { value: lastData, metadata } = await kv.getWithMetadata<Metadata>(networkName)
+    if (!!networkName) {
+      const { value: lastData, metadata } = await kv.getWithMetadata<Metadata>(networkName)
 
-    if (!!oldKv && !!lastData) {
-      event.waitUntil(oldKv.put(networkName, lastData, { metadata }))
+      if (!!oldKv && !!lastData) {
+        event.waitUntil(oldKv.put(networkName, lastData, { metadata }))
+      }
+
+      event.waitUntil(
+        kv.put(networkName, JSON.stringify(newData), {
+          metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
+        })
+      )
     }
-
-    event.waitUntil(
-      kv.put(networkName, JSON.stringify(newData), {
-        metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
-      })
-    )
   }
 }
