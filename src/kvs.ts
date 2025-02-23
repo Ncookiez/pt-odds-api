@@ -35,12 +35,7 @@ export const fetchPrizes = async (options?: { old?: boolean }) => {
   }
 }
 
-export const updateHandler = async (
-  event: FetchEvent | ScheduledEvent,
-  kv: KVNamespace,
-  newData: Data,
-  oldKv?: KVNamespace
-) => {
+export const updateHandler = async (event: FetchEvent | ScheduledEvent, kv: KVNamespace, newData: Data, oldKv?: KVNamespace) => {
   const networkName = getNetworkNameByChainId(NETWORK)
 
   if (!!networkName) {

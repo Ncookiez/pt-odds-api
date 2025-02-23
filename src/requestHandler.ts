@@ -25,10 +25,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
     //   const newPrizes = await updatePrizes(event)
     //   const isSuccess = !!newOdds && !!newPrizes
 
-    //   return new Response(isSuccess ? 'Updated' : 'Failed to update', {
-    //     ...DEFAULT_HEADERS,
-    //     status: isSuccess ? 200 : 500
-    //   })
+    //   return new Response(isSuccess ? 'Updated' : 'Failed to update', { ...DEFAULT_HEADERS, status: isSuccess ? 200 : 500 })
     // }
 
     return new Response('Invalid request', { ...DEFAULT_HEADERS, status: 400 })

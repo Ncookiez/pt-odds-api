@@ -28,11 +28,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent) => {
     const vaults = await getSubgraphVaults()
     const vaultAddresses = vaults.map((v) => v.address)
 
-    const vaultPortions = await prizePool.getVaultContributedPercentages(
-      vaultAddresses,
-      startDrawId,
-      lastDrawId
-    )
+    const vaultPortions = await prizePool.getVaultContributedPercentages(vaultAddresses, startDrawId, lastDrawId)
 
     const contracts: {
       address: Address
@@ -40,6 +36,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent) => {
       functionName: 'getVaultUserBalanceAndTotalSupplyTwab'
       args: [Address, Address, number, number]
     }[] = []
+
     vaults.forEach((vault) => {
       vault.userAddresses.forEach((userAddress) => {
         contracts.push({
@@ -51,7 +48,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent) => {
       })
     })
 
-    const multicallResults = await VIEM_CLIENT.multicall({ contracts, batchSize: 1024 * 1024 })
+    const multicallResults = await VIEM_CLIENT.multicall({ contracts })
 
     const vaultUserOdds: {
       [vaultId: string]: { userAddress: Lowercase<Address>; odds: number }[]
@@ -61,7 +58,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent) => {
     vaults.forEach((vault) => {
       const vaultId = getVaultId({ chainId: NETWORK, address: vault.address })
 
-      vault.userAddresses.forEach((_userAddress) => {
+      vault.userAddresses.forEach((userAddress) => {
         const call = multicallResults[multicallIndex++]
 
         if (call.status === 'success') {
@@ -72,10 +69,7 @@ export const updateOdds = async (event: FetchEvent | ScheduledEvent) => {
               vaultUserOdds[vaultId] = []
             }
 
-            const userAddress = lower(_userAddress)
-            const odds = divideBigInts(userTwab, vaultTwab, 18)
-
-            vaultUserOdds[vaultId].push({ userAddress, odds })
+            vaultUserOdds[vaultId].push({ userAddress: lower(userAddress), odds: divideBigInts(userTwab, vaultTwab, 18) })
           }
         }
       })
@@ -111,6 +105,7 @@ export const updatePrizes = async (event: FetchEvent | ScheduledEvent) => {
 
     const prizeToken = await prizePool.getPrizeTokenData()
 
+    // TODO: ideally we don't need to query every draw from the subgraph - or at least ignore canary prizes
     const draws = await getPaginatedSubgraphDraws(NETWORK)
 
     draws.forEach((draw) => {

@@ -1,7 +1,4 @@
-import {
-  SUBGRAPH_API_URLS,
-  getNiceNetworkNameByChainId
-} from '@generationsoftware/hyperstructure-client-js'
+import { SUBGRAPH_API_URLS, getNiceNetworkNameByChainId } from '@generationsoftware/hyperstructure-client-js'
 import { Address } from 'viem'
 import type { SubgraphVault } from './types'
 

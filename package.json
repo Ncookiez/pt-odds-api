@@ -1,14 +1,14 @@
 {
   "name": "pt-odds-api",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@generationsoftware/hyperstructure-client-js": "1.13.3",
-    "viem": "2.13.2"
+    "@generationsoftware/hyperstructure-client-js": "1.20.3",
+    "viem": "2.21.16"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20230518.0",
