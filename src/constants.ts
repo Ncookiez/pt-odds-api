@@ -40,8 +40,4 @@ export const PRIZE_POOLS: Record<Network, { address: Address; gpDraws: number; p
   [Network.gnosis]: { address: '0x0c08c2999e1a14569554eddbcda9da5e1918120f', gpDraws: 91, prizeToken: { decimals: 18 } }
 }
 
-export const VIEM_CLIENT = createPublicClient({
-  chain: CHAINS[NETWORK],
-  transport: http(RPC_URL),
-  batch: { multicall: { batchSize: 512 * 1_024 } }
-})
+export const VIEM_CLIENT = createPublicClient({ chain: CHAINS[NETWORK], transport: http(RPC_URL) })
